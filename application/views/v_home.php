@@ -32,9 +32,11 @@
           <div id="test">
             <h2>List Masjid</h2>
             <div class="list-group">
-              <?php foreach($masjid as $data) : ?>
-              <a href="#" class="list-group-item" onclick="flyMarker()"><?php echo $data['nama_masjid']?></a>
-              <?php endforeach; ?> 
+            <?php foreach ($masjid as $data) : ?>
+              <a href="#" class="list-group-item" onclick="flyToMasjid('<?php echo $data['id_masjid']; ?>')">
+                <?php echo $data['nama_masjid']; ?>
+              </a>
+            <?php endforeach; ?>
             </div>
           </div>
           <!--End Test -->
@@ -196,6 +198,34 @@
               map.addLayer(geoLayer);
             });
           });
+
+          // Data masjid dari PHP
+          var masjidMarkers = [
+            <?php foreach ($masjid as $data) : ?>
+              {
+                id: "<?php echo $data['id_masjid']; ?>",
+                name: "<?php echo $data['nama_masjid']; ?>",
+                latitude: <?php echo $data['latitude']; ?>,
+                longitude: <?php echo $data['longitude']; ?>
+              },
+            <?php endforeach; ?>
+          ];
+
+
+          // Fungsi untuk memindahkan ke lokasi masjid saat diklik
+          function flyToMasjid(id) {
+            // Cari masjid berdasarkan ID
+            var masjid = masjidMarkers.find(m => m.id === id);
+            var mas_long = masjid.longitude;
+            var mas_lat = masjid.latitude;
+            if (masjid) {
+              map.flyTo([mas_long, mas_lat], 18, {
+                animate: true,
+                duration: 2
+              });
+            }
+          }
+
           </script>
   </body>
 </html>
